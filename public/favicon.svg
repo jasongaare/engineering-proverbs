@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#f8f4e9"/>
+  <g transform="translate(6, 4)">
+    <!-- Open book pages -->
+    <path d="M10 4 C10 4, 2 3, 1 2 L1 20 C2 21, 10 22, 10 22 Z" fill="#e8e0cc" stroke="#2c1810" stroke-width="0.8"/>
+    <path d="M10 4 C10 4, 18 3, 19 2 L19 20 C18 21, 10 22, 10 22 Z" fill="#e8e0cc" stroke="#2c1810" stroke-width="0.8"/>
+    <!-- Spine -->
+    <line x1="10" y1="4" x2="10" y2="22" stroke="#2c1810" stroke-width="0.8"/>
+    <!-- Text lines left -->
+    <line x1="4" y1="9" x2="8.5" y2="10" stroke="#5c4033" stroke-width="0.6" opacity="0.5"/>
+    <line x1="4" y1="12" x2="8.5" y2="13" stroke="#5c4033" stroke-width="0.6" opacity="0.5"/>
+    <line x1="4" y1="15" x2="8.5" y2="16" stroke="#5c4033" stroke-width="0.6" opacity="0.5"/>
+    <!-- Text lines right -->
+    <line x1="11.5" y1="10" x2="16" y2="9" stroke="#5c4033" stroke-width="0.6" opacity="0.5"/>
+    <line x1="11.5" y1="13" x2="16" y2="12" stroke="#5c4033" stroke-width="0.6" opacity="0.5"/>
+    <line x1="11.5" y1="16" x2="16" y2="15" stroke="#5c4033" stroke-width="0.6" opacity="0.5"/>
+  </g>
+</svg>
