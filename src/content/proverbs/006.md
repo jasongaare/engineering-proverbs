@@ -1,0 +1,4 @@
+---
+quote: "First, solve the problem. Then, write the code."
+author: "John Johnson"
+---

@@ -1,135 +1,101 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  --main-family: 'Poppins', sans-serif;
-  --color-bg: linear-gradient(180deg, #FFFFFF 0%, #AEC6DC 100%);
+  --font-serif: 'Merriweather', Georgia, 'Times New Roman', serif;
+  --color-paper: #f8f4e9;
+  --color-paper-dark: #e8e0cc;
+  --color-ink: #2c1810;
+  --color-ink-light: #5c4033;
+}
 
-  /* Controls the blob blur gradient colors within the main tag's svg */
-  --top-right-blur-1: #20C6B7;
-  --top-right-blur-2: #4D9ABF;
-  --bttm-left-blur-1: #FF5C02;
-  --bttm-left-blur-2: #FFCDB1;
+* {
+  box-sizing: border-box;
 }
 
 html {
-    background: var(--color-bg);
-    font-family: var(--main-family);
-    min-height: 100%;
+  background: linear-gradient(135deg, var(--color-paper-dark) 0%, var(--color-paper) 50%, var(--color-paper-dark) 100%);
+  font-family: var(--font-serif);
+  min-height: 100vh;
 }
 
-#background {
-    position: fixed;
-    width: 100%;
-    z-index: -1;
-    height: 100%;
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-#content {
+main {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-}
-
-.header{
-    text-align: center;
-}
-
-.header h1 {
-  padding-top:5%;
-  margin: 0;
-}
-
-.header .logo img {
-  padding: 30px 0;
-  width: 100%;
-}
-
-.header h2 {
-  line-height: 34px;
-  width: 50%;
-  margin: 0 auto;
-  padding-bottom: 5%;
-  font-weight: 500;
-}
-
-@media only screen and (max-width: 450px) {
-  .header h2 {
-    width: 90%;
-    padding: 5%;
-  }
-}
-
-.btns{
-  margin-bottom: 5%;
-}
-
-.btn{
-  padding: 15px;
-  border-radius: 5px;
-  width: 150px;
-  margin: 0 1%;
-  text-decoration: none;
-}
-
-.btn.primary{
-  display: inline-block;
-  width: max-content;
-  background: #21A69A;
-  border: none;
-  color: white;
-  box-shadow: -3px 3px 5px rgb(35 33 33 / 23%);
-}
-
-.btn.primary:hover {
-  background: #21a69a;
-  box-shadow: inset 3px 4px 10px rgb(35 33 33 / 40%);
-  /* -webkit-box-shadow: inset 3px 4px 10px rgb(35 33 33 / 40%); */
-}
-
-.btn.secondary{
-  background: transparent;
-  border: #093C4F 2px solid;
-  color: #0D1D24;
-}
-
-.btn.secondary:hover {
-  background: #05171f;
-  color: white;
-}
-
-.resource-list {
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: larger;
-  text-align: center;
-  width: 100%;
-}
-
-.resource-list ul {
-  text-align: left;
-  margin: 0 auto;
-  list-style: none;
-  display: flex;
   justify-content: center;
-  padding: 2%;
+  padding: 2rem;
 }
 
-.resource-list li {
-  padding: 2%;
-  font-weight: bold;
-}
-
-.resource-list a {
-  color: black;
-  line-height: 30px;
-}
-
-footer {
-  margin: 0 auto;
+.book-page {
+  background: var(--color-paper);
+  border-radius: 4px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 0 80px rgba(0, 0, 0, 0.03);
+  max-width: 50rem;
   width: 100%;
-  text-align: center;
+  padding: 3rem 2rem;
+  position: relative;
 }
 
-footer img {
-  width: 20px;
+.book-page::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--color-paper-dark), transparent);
+}
+
+h1 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 400;
+  text-align: center;
+  color: var(--color-ink-light);
+  margin: 0 0 2rem 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.refresh-btn {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--color-ink-light);
+  color: var(--color-ink-light);
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.refresh-btn:focus {
+  outline: 2px solid var(--color-ink-light);
+  outline-offset: 2px;
+}
+
+footer.site-footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--color-ink-light);
+  font-size: 0.85rem;
+  opacity: 0.7;
 }

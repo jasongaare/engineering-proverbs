@@ -1,41 +1,105 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../components/Layout.astro';
-import Background from '../components/Background.astro';
+import ProverbDisplay from '../components/ProverbDisplay.astro';
+
+const allProverbs = await getCollection('proverbs');
+const proverbsData = allProverbs.map(p => ({
+  quote: p.data.quote,
+  author: p.data.author,
+  source: p.data.source,
+}));
 ---
 
-<Layout title="Astro Quickstart">
+<Layout title="The Engineering Book of Proverbs">
 	<main>
-   <Background />
-    <div id="content">
-      <div class="header">
-        <h1>Quickstart Template</h1>
-        <div class="logo">
-          <img src="https://user-images.githubusercontent.com/43764894/223559085-8ff69d2f-4247-427f-a3a6-d2036b00082a.png" alt="Netlify plus Astro banner">
-        </div>
-        <h2>
-          This is a bare-bones Astro project that has everything you need to quickly deploy it to Netlify
-        </h2>
-        <div class="btns">
-          <a href="https://app.netlify.com/start/deploy?repository=https://github.com/netlify-templates/astro-quickstart" class="btn primary">Deploy to Netlify</a>
-          <a href="https://github.com/netlify-templates/astro-quickstart" class="btn secondary">View Repo</a>
-        </div>
-      </div>
-			<div class="resource-list">
-        <ul>
-          <li>
-            <a href="https://ntl.fyi/38O9wmY">Netlify Blog: Astro posts</a>
-					</li>
-          <li>
-            <a href="https://developers.netlify.com/guides/tag/astro/">Netlify DevHub: Astro Guides</a>
-					</li>
-          <li>
-            <a href="https://ntl.fyi/3KHGtyz">Netlify Docs</a>
-          </li>
-          <li>
-            <a href="https://docs.astro.build/en/getting-started/">Astro Docs</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+		<div class="book-page">
+			<h1>The Engineering Book of Proverbs</h1>
+			<div id="proverb-container">
+				<ProverbDisplay {...proverbsData[0]} />
+			</div>
+			<button class="refresh-btn" id="another-btn">Another proverb</button>
+		</div>
 	</main>
 </Layout>
+
+<script define:vars={{ proverbsData }}>
+	const proverbs = proverbsData;
+	let currentIndex = Math.floor(Math.random() * proverbs.length);
+
+	function renderProverb(proverb) {
+		const container = document.getElementById('proverb-container');
+		const sourceHtml = proverb.source
+			? `<cite class="source">, ${proverb.source}</cite>`
+			: '';
+
+		container.innerHTML = `
+			<article class="proverb">
+				<blockquote>
+					<p class="quote">${proverb.quote}</p>
+				</blockquote>
+				<footer class="attribution">
+					<span class="author">— ${proverb.author}</span>
+					${sourceHtml}
+				</footer>
+			</article>
+		`;
+	}
+
+	// Show random proverb on page load
+	renderProverb(proverbs[currentIndex]);
+
+	// Handle button click
+	document.getElementById('another-btn').addEventListener('click', () => {
+		let newIndex;
+		do {
+			newIndex = Math.floor(Math.random() * proverbs.length);
+		} while (newIndex === currentIndex && proverbs.length > 1);
+		currentIndex = newIndex;
+		renderProverb(proverbs[currentIndex]);
+	});
+</script>
+
+<style>
+	.proverb {
+		max-width: 42rem;
+		margin: 0 auto;
+		padding: 2rem;
+		text-align: center;
+	}
+
+	blockquote {
+		margin: 0;
+		padding: 0;
+	}
+
+	.quote {
+		font-size: clamp(1.5rem, 4vw, 2.25rem);
+		line-height: 1.5;
+		font-style: italic;
+		color: #2c1810;
+		margin: 0 0 1.5rem 0;
+	}
+
+	.quote::before {
+		content: '"';
+	}
+
+	.quote::after {
+		content: '"';
+	}
+
+	.attribution {
+		font-size: 1.125rem;
+		color: #5c4033;
+	}
+
+	.author {
+		font-weight: 500;
+	}
+
+	.source {
+		font-style: italic;
+		opacity: 0.85;
+	}
+</style>
