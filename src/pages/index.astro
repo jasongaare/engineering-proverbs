@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../components/Layout.astro';
-import ProverbDisplay from '../components/ProverbDisplay.astro';
 
 const allProverbs = await getCollection('proverbs');
 const proverbsData = allProverbs.map(p => ({
+  id: p.data.id,
   quote: p.data.quote,
   author: p.data.author,
   source: p.data.source,
@@ -15,20 +15,44 @@ const proverbsData = allProverbs.map(p => ({
 	<main>
 		<div class="book-page">
 			<h1>The Engineering Book of Proverbs</h1>
-			<div id="proverb-container">
-				<ProverbDisplay {...proverbsData[0]} />
+			<div id="proverb-container" aria-live="polite">
 			</div>
-			<button class="refresh-btn" id="another-btn">Another proverb</button>
+			<div class="button-row">
+				<button class="refresh-btn" id="another-btn">Another proverb</button>
+				<button class="share-btn" id="share-btn">Share</button>
+			</div>
 		</div>
 	</main>
 </Layout>
 
 <script define:vars={{ proverbsData }}>
 	const proverbs = proverbsData;
-	let currentIndex = Math.floor(Math.random() * proverbs.length);
+	const container = document.getElementById('proverb-container');
+	const shareBtn = document.getElementById('share-btn');
+
+	// Check for permalink parameter
+	function getInitialIndex() {
+		const params = new URLSearchParams(window.location.search);
+		const q = params.get('q');
+		if (q) {
+			const id = parseInt(q, 10);
+			const index = proverbs.findIndex(p => p.id === id);
+			if (index !== -1) return index;
+		}
+		return Math.floor(Math.random() * proverbs.length);
+	}
+
+	let currentIndex = getInitialIndex();
+	const recentHistory = [currentIndex];
+	const historySize = Math.min(10, proverbs.length - 1);
+
+	function updateUrl(proverb) {
+		const url = new URL(window.location);
+		url.searchParams.set('q', proverb.id);
+		history.replaceState(null, '', url);
+	}
 
 	function renderProverb(proverb) {
-		const container = document.getElementById('proverb-container');
 		const sourceHtml = proverb.source
 			? `<cite class="source">, ${proverb.source}</cite>`
 			: '';
@@ -46,60 +70,46 @@ const proverbsData = allProverbs.map(p => ({
 		`;
 	}
 
-	// Show random proverb on page load
+	// Show proverb on page load
 	renderProverb(proverbs[currentIndex]);
+	updateUrl(proverbs[currentIndex]);
 
-	// Handle button click
+	// Handle "Another proverb" button
 	document.getElementById('another-btn').addEventListener('click', () => {
 		let newIndex;
 		do {
 			newIndex = Math.floor(Math.random() * proverbs.length);
-		} while (newIndex === currentIndex && proverbs.length > 1);
+		} while (recentHistory.includes(newIndex) && proverbs.length > 1);
 		currentIndex = newIndex;
-		renderProverb(proverbs[currentIndex]);
+		recentHistory.push(currentIndex);
+		if (recentHistory.length > historySize) recentHistory.shift();
+
+		container.style.opacity = '0';
+		setTimeout(() => {
+			renderProverb(proverbs[currentIndex]);
+			updateUrl(proverbs[currentIndex]);
+			container.style.opacity = '1';
+		}, 200);
+	});
+
+	// Handle "Share" button
+	shareBtn.addEventListener('click', () => {
+		const url = window.location.href;
+		navigator.clipboard.writeText(url).then(() => {
+			shareBtn.textContent = 'Copied!';
+			shareBtn.classList.add('copied');
+			setTimeout(() => {
+				shareBtn.textContent = 'Share';
+				shareBtn.classList.remove('copied');
+			}, 1500);
+		});
+	});
+
+	// Keyboard shortcut: spacebar for next proverb
+	document.addEventListener('keydown', (e) => {
+		if (e.key === ' ' && e.target === document.body) {
+			e.preventDefault();
+			document.getElementById('another-btn').click();
+		}
 	});
 </script>
-
-<style>
-	.proverb {
-		max-width: 42rem;
-		margin: 0 auto;
-		padding: 2rem;
-		text-align: center;
-	}
-
-	blockquote {
-		margin: 0;
-		padding: 0;
-	}
-
-	.quote {
-		font-size: clamp(1.5rem, 4vw, 2.25rem);
-		line-height: 1.5;
-		font-style: italic;
-		color: #2c1810;
-		margin: 0 0 1.5rem 0;
-	}
-
-	.quote::before {
-		content: '"';
-	}
-
-	.quote::after {
-		content: '"';
-	}
-
-	.attribution {
-		font-size: 1.125rem;
-		color: #5c4033;
-	}
-
-	.author {
-		font-weight: 500;
-	}
-
-	.source {
-		font-style: italic;
-		opacity: 0.85;
-	}
-</style>
