@@ -8,6 +8,7 @@ const proverbsData = allProverbs.map(p => ({
   quote: p.data.quote,
   author: p.data.author,
   source: p.data.source,
+  source_url: p.data.source_url,
 }));
 ---
 
@@ -53,8 +54,11 @@ const proverbsData = allProverbs.map(p => ({
 	}
 
 	function renderProverb(proverb) {
+		const sourceText = proverb.source_url
+			? `<a href="${proverb.source_url}" target="_blank" rel="noopener noreferrer">${proverb.source}</a>`
+			: proverb.source;
 		const sourceHtml = proverb.source
-			? `<cite class="source">, ${proverb.source}</cite>`
+			? `<cite class="source">, ${sourceText}</cite>`
 			: '';
 
 		container.innerHTML = `
@@ -63,8 +67,7 @@ const proverbsData = allProverbs.map(p => ({
 					<p class="quote">${proverb.quote}</p>
 				</blockquote>
 				<footer class="attribution">
-					<span class="author">— ${proverb.author}</span>
-					${sourceHtml}
+					<span class="author">— ${proverb.author}</span>${sourceHtml}
 				</footer>
 			</article>
 		`;

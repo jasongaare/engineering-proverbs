@@ -7,6 +7,7 @@ const proverbs = defineCollection({
     quote: z.string(),
     author: z.string(),
     source: z.string().optional(),
+    source_url: z.string().url().optional(),
   }),
 });
 
